@@ -65,4 +65,11 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
-          script: expect /home/vlad/HW_CICD_REP/deploy.exp
+          script: |
+            cd /home/vlad/HW_CICD_REP
+            git pull origin main
+            source env/bin/activate
+            pip install -r requirements.txt
+            python manage.py migrate
+            python manage.py collectstatic
+            sudo systemctl restart qunicorn
